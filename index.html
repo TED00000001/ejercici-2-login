@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ejercicio 2 - Revisar y corregir un inicio de sesión | ejercicio-2-login</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #F5F5F5; color: #1F1F1F; margin: 0; padding: 20px; }
+    .comparar { display: flex; flex-wrap: wrap; gap: 20px; }
+    .tarjeta, form { background: white; border-radius: 10px; padding: 20px; max-width: 360px; }
+    .mal { border-top: 8px solid #B3261E; }
+    .bien { border-top: 8px solid #2E7D32; }
+    label { display: block; font-weight: bold; margin-top: 14px; }
+    input { width: 100%; box-sizing: border-box; font-size: 18px; padding: 10px; border: 1px solid #767676; border-radius: 6px; margin-top: 4px; }
+    button, .btn { font-size: 18px; padding: 12px 24px; margin-top: 16px; border: 0; border-radius: 6px; background: #2E7D32; color: #FFFFFF; cursor: pointer; }
+    button:focus-visible, input:focus-visible, a:focus-visible { outline: 4px solid #F4B400; outline-offset: 2px; }
+    .mal .btn { display: inline-block; background: #0F4C81; }
+    .con-error { border: 3px solid #B3261E; }
+    .error { color: #B3261E; font-weight: bold; margin: 4px 0 0; min-height: 20px; }
+    .exito { color: #2E7D32; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <p><small>Carpeta: ejercicio-2-login</small></p>
+  <h1>Ejercicio 2: revisar y corregir un inicio de sesión</h1>
+  <p>Compara el formulario original con la versión corregida. Prueba enviar ambos vacíos y navegar con Tab.</p>
+  <div class="comparar">
+    <section class="tarjeta mal">
+      <h2>Antes</h2>
+      <h3>Portal del estudiante</h3>
+      <input placeholder="Correo">
+      <input type="password" placeholder="Contraseña">
+      <div class="btn" id="entrar-mal">Entrar</div>
+      <p style="color:red">*</p>
+      <a href="#">Clic aquí</a>
+      <p id="mensaje-mal"></p>
+    </section>
+    <form class="bien" id="formulario" novalidate>
+      <h2>Después</h2>
+      <h3>Portal del estudiante</h3>
+      <p>Los campos con * son obligatorios.</p>
+      <label for="correo">Correo *</label>
+      <input id="correo" type="email" autocomplete="email" aria-describedby="error-correo">
+      <p class="error" id="error-correo"></p>
+      <label for="clave">Contraseña *</label>
+      <input id="clave" type="password" autocomplete="current-password" aria-describedby="error-clave">
+      <p class="error" id="error-clave"></p>
+      <button type="submit">Entrar</button>
+      <p id="mensaje"></p>
+      <a href="#">Recuperar mi contraseña</a>
+    </form>
+  </div>
+  <p>La versión corregida muestra los errores con palabras y lleva el cursor al primer campo con problema. Al completar ambos campos aparece «Bienvenida o bienvenido».</p>
+  <script>
+    document.getElementById('entrar-mal').addEventListener('click', function () {
+      document.getElementById('mensaje-mal').textContent = 'Intento de inicio de sesión.';
+    });
+    function revisar(idCampo, idError, textoError) {
+      var campo = document.getElementById(idCampo);
+      var error = document.getElementById(idError);
+      if (campo.value === '') {
+        error.textContent = textoError;
+        campo.classList.add('con-error');
+        return false;
+      }
+      error.textContent = '';
+      campo.classList.remove('con-error');
+      return true;
+    }
+    document.getElementById('formulario').addEventListener('submit', function (evento) {
+      evento.preventDefault();
+      var correoBien = revisar('correo', 'error-correo', 'Escribe tu correo.');
+      var claveBien = revisar('clave', 'error-clave', 'Escribe tu contraseña.');
+      var mensaje = document.getElementById('mensaje');
+      if (!correoBien) {
+        document.getElementById('correo').focus();
+        mensaje.textContent = '';
+      } else if (!claveBien) {
+        document.getElementById('clave').focus();
+        mensaje.textContent = '';
+      } else {
+        mensaje.textContent = 'Bienvenida o bienvenido.';
+        mensaje.className = 'exito';
+      }
+    });
+  </script>
+</body>
+</html>
